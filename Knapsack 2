@@ -1,0 +1,64 @@
+#include <bits/stdc++.h>
+using namespace std;
+ 
+long long int w[100];
+long long int v[100];
+ 
+ 
+ 
+ 
+ long long  int dp[100][100001];   // 100 for items and max stored value can be 100*(1000)=1e5.
+ 
+int main()
+ 
+{
+    long long int n, W,ans;
+    cin >> n >> W;
+    ans=-1e18;
+ 
+    for (int i = 0; i < n; i++)
+    {
+        cin >> w[i] >> v[i];
+    }
+ 
+    for(int i=0;i<100;i++)
+    {
+        for(int j=0;j<=100000;j++)
+        {
+            dp[i][j]=1e18;
+        }
+    }
+ 
+    //dp[i][j] defines the min  weight till index i with atmost values j..
+ 
+    dp[0][0]=0; // atmost value zero means bag empty
+    dp[0][v[0]]=w[0];   // at most value v[0] means w[0] weight
+    for(int i=1;i<n;i++)  //iterating over items
+    {
+         dp[i][0]=0;
+        for(int values=1;values<=100000;values++)
+        {
+             //not pick
+              dp[i][values]=dp[i-1][values];
+ 
+            // if pick
+            if(values>=v[i])
+                dp[i][values]=min(dp[i][values],w[i]+dp[i-1][values-v[i]]);
+ 
+        }
+    }
+ 
+    for(long long int values=100000;values>=0;values--)
+    {
+        if(dp[n-1][values]<=W)           // max summed value stored with weight <=w 
+        {
+            ans=values;
+            break;
+        }
+        
+    }
+    cout<<ans<<endl;
+}
+ 
+ 
+// for reference watch HealthUg.
