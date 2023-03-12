@@ -1,0 +1,94 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+long long int w[100];
+long long int v[100];
+
+long long int dp[100][100001];
+int main()
+
+{
+    long long int n, W, ans;
+    cin >> n >> W;
+    ans = -1e18;
+
+    for (int i = 0; i < n; i++)
+    {
+        cin >> w[i] >> v[i];
+    }
+
+    // dp[i][j] defines the max value till index i with atmost weight j..
+
+    dp[0][0] = 0;               // at item '0' with empty bag
+    dp[0][w[0]] = v[0];         // 'at item '0' with utmost weight w[0]
+    for (int i = 1; i < n; i++) // iterating over items
+    {
+        dp[i][0] = 0;
+        for (int weight = 1; weight <= W; weight++)
+        {
+          
+            if (weight >= w[i])  // take max of pick and not pick
+                dp[i][weight] = max(dp[i - 1][weight], v[i] + dp[i - 1][weight - w[i]]);
+            else
+
+            {   // we can only not pick 
+                dp[i][weight] = dp[i - 1][weight];
+            }
+        }
+    }
+
+    for (int weight = 0; weight <= W; weight++)
+    {
+        ans = max(ans, dp[n - 1][weight]);
+    }
+    cout << ans << endl;
+}
+
+
+
+
+
+#include <bits/stdc++.h>
+using namespace std;
+
+ long long  int w[100];
+ long long  int v[100];
+
+ long long  int dp[100][100001];
+int main()
+
+{
+    long long int n, W,ans;
+    cin >> n >> W;
+    ans=-1e18;
+
+    for (int i = 0; i < n; i++)
+    {
+        cin >> w[i] >> v[i];
+    }
+
+    //dp[i][j] defines the max value till index i with atmost weight j..
+
+    dp[0][0]=0; // at item '0' with empty bag
+    dp[0][w[0]]=v[0];   // 'at item '0' with utmost weight w[0]
+    for(int i=1;i<n;i++)  //iterating over items
+    {
+         dp[i][0]=0;
+        for(int weight=1;weight<=W;weight++)
+        {
+             //not pick
+              dp[i][weight]=dp[i-1][weight];
+
+            // if pick
+            if(weight>=w[i])
+                dp[i][weight]=max(dp[i][weight],v[i]+dp[i-1][weight-w[i]]);
+
+        }
+    }
+
+    for(int weight=0;weight<=W;weight++)
+    {
+        ans=max(ans,dp[n-1][weight]);
+    }
+    cout<<ans<<endl;
+}
