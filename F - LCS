@@ -1,0 +1,92 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int dp[3000][3000];
+// dp[i][j]-> at index i(0 to i) and index j in string t and it stores max length of subseq
+
+int choice[3000][3000];
+// stores the best choice at every step;
+// choice 0== (i,j)->(i-1,j)
+// choice 1== (i,j)->(i,j-1)
+// choice 2== (i,j)->(i-1,j-1)
+int main()
+
+{
+    string s, t;
+    cin >> s >> t;
+    int n, m, ans;
+    n = s.length();
+    m = t.length();
+    ans = 0;
+    dp[0][0] = 0;
+
+    if (s[0] == t[0]) // pick
+    {
+        dp[0][0] = 1;
+        choice[0][0] = 2;
+    }
+
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < m; j++)
+        {
+            // not pick
+            if (i > 0)
+            {
+                dp[i][j] = dp[i - 1][j];
+                choice[i][j] = 0;
+            }
+
+            if (j > 0)
+            {
+                if (dp[i][j - 1] > dp[i][j])
+                {
+                    dp[i][j] = dp[i][j - 1];
+                    choice[i][j] = 1;
+                }
+            }
+
+            // pick
+            if (s[i] == t[j])
+            {
+                ans = 1;
+                if (i > 0 and j > 0)
+                {
+                    ans = 1 + dp[i - 1][j - 1];
+                }
+
+                if (ans > dp[i][j])
+                {
+                    dp[i][j] = ans;
+                    choice[i][j] = 2;
+                }
+            }
+        }
+    }
+
+    // iterating through best choice in rev order
+    int i = n - 1;
+    int j = m - 1;
+    string final;
+
+    while (i >= 0 and j >= 0)
+    {
+        if (choice[i][j] == 0)
+        {
+            i--;
+        }
+        else if (choice[i][j] == 1)
+        {
+            j--;
+        }
+        else // picked(ie s[i]==t[j])
+        {
+            final.push_back(s[i]);
+            i--;
+            j--;
+        }
+    }
+    reverse(final.begin(), final.end());
+
+    cout << final << endl;
+}
