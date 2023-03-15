@@ -1,0 +1,39 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+double dp[3000][3000];
+double p[3000];
+
+int main()
+
+{
+    int n;
+    cin >> n;
+    for(int i=0;i<n;i++)
+    {
+        cin>>p[i];
+    }
+
+    //dp[i][j]-> defines that i coins has been tossed and we got j heads
+
+    dp[0][1]=p[0];
+    dp[0][0]=1-p[0];
+    for(int i=1;i<n;i++)
+    {
+        for(int heads=0;heads<3000;heads++)
+        {
+            // tail
+            dp[i][heads]+=dp[i-1][heads]*(1-p[i]);
+
+            //heads
+            dp[i][heads]+=dp[i-1][heads-1]*(p[i]);
+        }
+    }
+    double  ans=0;
+    for(int heads=n/2+1;heads<3000;heads++)
+    {
+        ans+=dp[n-1][heads];
+    }
+    
+    cout<<setprecision(9)<<ans<<endl;
+}
